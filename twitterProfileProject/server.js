@@ -28,11 +28,12 @@ var timelineParams = {
   tweet_mode: "extended"
 }
 
+//TODO: PUT IN FUNCTION TO BE CALLED BY SEAN
 T.get('statuses/user_timeline', timelineParams, getTimeline);
 
 function getTimeline(err, data, response) {
-  let tweetTextList = [];
-  let hashtagList = [];
+  var tweetTextList = [];
+  var hashtagDict = {};
   let tempText = ""; //used when removing bad substrings from text
   let articles = [" I ", " a ", " the ", " in ", " an ", " he ", " she ", " you ", " that ", " this ", " is ", " we ", " us ", " to "];
   let otherBadStuff = [".", "!", ",", "/", "?", /\shttps?.+?(?=$)/, /\shttps?.+?(?=[\n ])/];
@@ -43,22 +44,31 @@ function getTimeline(err, data, response) {
     articles.forEach(function(article) {tempText = tempText.replace(article, " ")}); //strip away bad articles
     otherBadStuff.forEach(function(badStuff) {tempText = tempText.replace(badStuff, "")}); //strip away bad punctuation
     tweetTextList.push(tempText);
+    countHashtags(tweet); //call function to count hashtags, add to dict based on frequency
   });
 }
 
-var userParams = {
-      q: 'Donald Trump',
-  count: 1
+function countHashtags(tweet) {
+  console.log("TODO"); 
 }
+server.get('/getData', (req, res) => {
+  n = req.url; //n is url
+  console.log(n);
+  var userParams = {
+    q: 'Donald Trump',
+    count: 1
+  }
 
-T.get('users/search', userParams, searchedData);
+  T.get('users/search', userParams, searchedData);
 
-function searchedData(err, data, response) {  	
-	if (data.length>0){
-		console.log('exists')
-	}
+  function searchedData(err, data, response) {  	
+    if (data.length>0){
+      console.log('exists')
+    }
 
-	if (data.length==0){
-		console.log('null')
-	}
-}
+    if (data.length==0){
+      console.log('null')
+    }
+  }
+});
+
