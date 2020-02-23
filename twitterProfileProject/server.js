@@ -45,3 +45,20 @@ function getTimeline(err, data, response) {
     tweetTextList.push(tempText);
   });
 }
+
+var userParams = {
+      q: 'Donald Trump',
+  count: 1
+}
+
+T.get('users/search', userParams, searchedData);
+
+function searchedData(err, data, response) {  	
+	if (data.length>0){
+		console.log('exists')
+	}
+
+	if (data.length==0){
+		console.log('null')
+	}
+}
