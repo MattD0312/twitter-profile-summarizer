@@ -14,4 +14,7 @@
   "devDependencies": {},
   "author": "",
   "license": "ISC"
+  "engines": {
+    "node": "13.9.0"
+  }
 }
