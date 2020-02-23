@@ -52,7 +52,7 @@ function getTimeline(err, data, response) {
   shortWordDict = {};
   var tempText = ""; //used when removing bad substrings from text
   //TODO: FIX REGEX TO CHECK AGAINST CAPITALIZATION (REDUCE ARTICLES IN FINAL DICT
-  var articles = [ " so ", /^so/, /so$/, /[w|W]ill/, /^will/, /will$/, " I ", /^I/, /I$/, " i ", /^i/, /i$/, " a ", /^a/, /a$/, " the ", /^the/, /the$/, " in ", /^in/, /in$/, " an ", /^an/, /an$/, " he ", /^he/, /he$/, " she ", /^she/, /she$/, " you ", /^you/, /you$/, " that ", /^that/, /that$/, " this ", /^this/, /this$/, " is ", /^is/, /is$/, " we ", /^we/, /we$/, " us ", /^us/, /us$/, " to ", /^to/, /to$/, " and ", /^and/, /and$/, " are ", /^are/, /are$/, " be ", /^be/, /be$/, " for ", /^for/, /for$/, " of ", /^of/, /of$/, " on ", /^on/, /on$/, " our ", /^our/, /our$/, " was ", /^was/, /was$/];
+  var articles = [ " so ", /\b&amp;\b/, /^so/, /so$/, /[w|W]ill/, /^will/, /will$/, " I ", /^I/, /I$/, " i ", /^i/, /i$/, " a ", /^a/, /a$/, " the ", /^the/, /the$/, " in ", /^in/, /in$/, " an ", /^an/, /an$/, " he ", /^he/, /he$/, " she ", /^she/, /she$/, " you ", /^you/, /you$/, " that ", /^that/, /that$/, " this ", /^this/, /this$/, " is ", /^is/, /is$/, " we ", /^we/, /we$/, " us ", /^us/, /us$/, " to ", /^to/, /to$/, " and ", /^and/, /and$/, " are ", /^are/, /are$/, " be ", /^be/, /be$/, " for ", /^for/, /for$/, " of ", /^of/, /of$/, " on ", /^on/, /on$/, " our ", /^our/, /our$/, " was ", /^was/, /was$/];
   var otherBadStuff = [".", "!", ",", "/", "?", /\shttps?.+?(?=$)/, /\shttps?.+?(?=[\n ])/];
 
   //get text of each tweet into array
