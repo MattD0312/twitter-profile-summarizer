@@ -2,7 +2,7 @@
 {
   "name": "twitterphile",
   "description": "Our sample Node to Heroku app",
-  "main": "server.js",
+  "main": "twitterProfileProject/server.js",
   "scripts": {
     "start": "node twitterProfileProject/server.js"
   },
