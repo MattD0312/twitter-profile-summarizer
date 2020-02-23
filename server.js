@@ -1,5 +1,6 @@
 var express = require("express");
 var server = express();
+const path = require('path');
 
 //server.use(express.static(__dirname + "/public/index.html"));
 
