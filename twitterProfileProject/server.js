@@ -1,7 +1,7 @@
 var express = require("express");
 var server = express();
 
-server.use(express.static(__dirname + "/twitterProfileProject/public"));
+server.use('/', express.static(__dirname + "/twitterProfileProject/public"));
 server.listen(process.env.PORT || 8080);
 
 //var config = require('../config')
