@@ -3,7 +3,7 @@ var server = express();
 
 server.use(express.static(__dirname + "/twitterProfileProject/public"));
 server.get('/', function(req, res) {
-	res.render('index.html');
+	res.send('index.html');
 });
 
 server.listen(process.env.PORT || 8080);
