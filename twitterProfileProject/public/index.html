@@ -1,7 +1,303 @@
 <!DOCTYPE html>
-<!-- index.html -->
-<html>
-  <body>
-    <h1>Testing Testing 1 2 3...</h1>
-  </body>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Dragonhacks2020</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+  <!-- Custom styles for this template -->
+  <link href="css/scrolling-nav.css" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="#top" id="logo">Twitterphile</a>
+      <span id="sponser"><a href="https://dragonhacks.org" class="link-drag">@DragonHacks2020</a></span>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#about">
+              <div class="w3-large">
+                <i class="fa fa-search" id="icon-search"></i>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- intro dictionary definition -->
+  <header class="bg-primary text-white">
+    <div class="container">
+      <div class="container text-center" id="lead_1">
+        <h1><span id="lead_21">[twit</span>·<span id="lead_21">ter</span>·<span id="lead_21">phile]</span></h1>
+        <p class="lead" id="lead_2"><span id="lead_21">/twi-tər,fīl/</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="lead_21">noun</span><br>
+        <p class="lead">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="lead_21">a person who is fond of or greatly admires twitter data.</span></p>
+      </div>
+    </div>
+  </header>
+
+  <!-- search bar -->
+  <section id="about">
+    <div class="container">
+      <div class="active-pink-4 mb-4">
+        <div class="input-group">
+          <input class="form-control" type="text" placeholder="Search Twitter Username" aria-label="Search" id="search">
+          <button class="btn btn-sm" type="submit" id="button-search">Search</button>
+        </div>
+      </div>
+      <h2>Search</h2>
+      <p class="lead">Visualize a summary of the Target Twitter Username pulling data from recent and past twitter posts.</p>
+    </div>
+  </section>
+
+  <!-- graphs -->
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <section>
+    <div class="container">
+      <div class="graph-area-flex">
+        <div id="chartContainer1"></div>
+        <div id="chartContainer2"></div>
+        <div id="chartContainer3"></div>
+        <div id="chartContainer4"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Twitterphile 2020</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom JavaScript for this theme -->
+  <script src="js/scrolling-nav.js"></script>
+
+  <script>
+    var search = document.getElementById("search");
+    var button = document.getElementById("button-search");
+    var username = '';
+
+    //interactive navbar
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("mainNav").style.padding = "0px 0px";
+        document.getElementById("logo").style.fontSize = "25px";
+      } else {
+        document.getElementById("mainNav").style.padding = "25px 15px";
+        document.getElementById("logo").style.fontSize = "35px";
+      }
+    }
+
+    // automatically add @ to search bar
+    search.addEventListener("click", function() {
+      search.value = "@";
+    });
+    document.addEventListener('click', function(event) {
+      var isClickInside = search.contains(event.target);
+
+      if (!isClickInside) {
+        search.value = "";
+      }
+    });
+
+    // search username with AJAX request
+    search.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        button.click();
+      }
+    });
+
+    button.addEventListener("click", myFunction);
+
+    function myFunction() {
+      username = search.value.substring(1);
+
+      var xhr = new XMLHttpRequest();
+      xhr.addEventListener("load", responseReceivedHandler);
+      xhr.responseType = "json";
+      xhr.open('GET', '/getData?username=' + username, true);
+      xhr.send();
+    }
+
+    function responseReceivedHandler() {
+      list = this.response;
+      console.log(list);
+
+      //bar and pie graph
+      var count = 0;
+      for(var key in list[0]) {
+        chart1.options.title.text = "Top 10 Most Used Words For " + username;
+        chart2.options.title.text = "Top 10 Most Used Words For " + username;
+        //console.log(list[0][key]);
+        //console.log(count, key, list[0][key]);
+        chart1.data[0].dataPoints[count] = ({x: count, y: list[0][key], label: key.toString()});
+        chart2.data[0].dataPoints[count] = ({y: list[0][key], legendText: key.toString(), indexLabel: key.toString()});
+        count+=1;
+        if (count==10) {
+          break
+        }
+      }
+
+      //line and column chart1
+      var count = 0;
+      for(var key in list[1]) {
+        chart3.options.title.text = "Top 10 Most Used Hashtags For " + username;
+        chart4.options.title.text = "Top 10 Most Used Hashtags For " + username;
+
+        chart3.data[0].dataPoints[count] = ({x: count, y: list[1][key], indexLabel: key.toString()});
+        chart4.data[0].dataPoints[count] = ({y: list[1][key], label: key.toString()});
+        count+=1;
+        if (count==10) {
+          break
+        }
+      }
+
+      console.log("trying to change");
+      chart1.render();
+      //chart1.render();
+      chart2.render();
+      chart3.render();
+      chart4.render();
+    }
+
+    //Spline Chart
+    var chart1 = new CanvasJS.Chart("chartContainer1",
+      {
+          animationEnabled: true,
+          animationDuration: 1000,
+          title: {
+              text: "Spline Area Chart"
+          },
+          axisX: {
+              interval: 10,
+          },
+          data: [
+          {
+              type: "splineArea",
+              color: "rgba(255,12,32,.3)",
+              dataPoints : [
+                  { x: 1, y: 5, label: 'hello' },
+                  { x: 2, y: 9, label: 'hi' },
+                  { x: 3, y: 2, label: 'asdf' },
+                  { x: 4, y: 7, label: 'asldkf' },
+                  { x: 5, y: 5, label: 'woof' }
+              ]
+          },
+          ]
+      });
+
+
+    var chart2 = new CanvasJS.Chart("chartContainer2",
+      {
+          animationEnabled: true,
+          title: {
+              text: "Pie Chart",
+          },
+          data: [
+          {
+              type: "pie",
+              showInLegend: true,
+              dataPoints: [
+                  { y: 4181563, legendText: "Cars", indexLabel: "PlayStation 3" },
+                  { y: 2175498, legendText: "Wii", indexLabel: "Wii" },
+                  { y: 3125844, legendText: "360", indexLabel: "Xbox 360" },
+                  { y: 1176121, legendText: "DS", indexLabel: "Nintendo DS" },
+                  { y: 1727161, legendText: "PSP", indexLabel: "PSP" },
+                  { y: 4303364, legendText: "3DS", indexLabel: "Nintendo 3DS" },
+                  { y: 1717786, legendText: "Vita", indexLabel: "PS Vita" }
+              ]
+          },
+          ]
+      });
+
+    var chart3 = new CanvasJS.Chart("chartContainer3",
+      {
+          animationEnabled: true,
+          title: {
+              text: "Line Chart"
+          },
+          axisX: {
+              interval: 10,
+              labelAngle: -30
+          },
+          axisY: {
+              includeZero: false
+          },
+          data: [
+          {
+            type: "line",
+            dataPoints: [
+                { x: new Date(2012, 00, 1), y: 450 },
+                { x: new Date(2012, 01, 1), y: 414 },
+                { x: new Date(2012, 02, 1), y: 520, indexLabel: "highest", markerColor: "red", markerType: "triangle" },
+                { x: new Date(2012, 03, 1), y: 460 },
+                { x: new Date(2012, 04, 1), y: 450 }
+              ]
+          }
+          ]
+      });
+    //chart.render();
+
+    var chart4 = new CanvasJS.Chart("chartContainer4",
+      {
+          animationEnabled: true,
+          title: {
+              text: "Column Chart"
+          },
+          axisX: {
+              labelAngle: -30
+          },
+          data: [
+          {
+              type: "column",
+              legendMarkerType: "triangle",
+              legendMarkerColor: "green",
+              color: "rgba(255,12,32,.3)",
+              showInLegend: true,
+              legendText: "Commonly Used Names",
+              dataPoints: [
+                  { x: 10, y: 297571, label: "India" },
+                  { x: 20, y: 267017, label: "Saudi" },
+                  { x: 30, y: 175200, label: "Canada" }
+              ]
+          },
+          ]
+      });
+    chart1.render();
+    chart2.render();
+    chart3.render();
+    chart4.render();
+
+  </script>
+</body>
 </html>
