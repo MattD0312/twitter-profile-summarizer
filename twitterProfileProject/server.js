@@ -2,7 +2,7 @@ var express = require("express");
 var server = express();
 
 server.use(express.static("public"));
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 8080);
 
 //var config = require('../config')
 //var mykey = '0va785i7a7PYnFTmHuYnbZsgR';
