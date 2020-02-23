@@ -156,8 +156,8 @@
       //bar and pie graph
       var count = 0;
       for(var key in list[0]) {
-        chart1.options.title.text = "Top 10 Most Used Words For " + username;
-        chart2.options.title.text = "Top 10 Most Used Words For " + username;
+        chart1.options.title.text = "Top 10 Most Used Words For @" + username;
+        chart2.options.title.text = "Top 10 Most Used Words For @" + username;
         //console.log(list[0][key]);
         //console.log(count, key, list[0][key]);
         chart1.data[0].dataPoints[count] = ({x: count, y: list[0][key], label: key.toString()});
@@ -171,8 +171,8 @@
       //line and column chart1
       var count = 0;
       for(var key in list[1]) {
-        chart3.options.title.text = "Top 10 Most Used Hashtags For " + username;
-        chart4.options.title.text = "Top 10 Most Used Hashtags For " + username;
+        chart3.options.title.text = "Top 10 Most Used Hashtags For @" + username;
+        chart4.options.title.text = "Top 10 Most Used Hashtags For @" + username;
 
         chart3.data[0].dataPoints[count] = ({x: count, y: list[1][key], indexLabel: key.toString()});
         chart4.data[0].dataPoints[count] = ({y: list[1][key], label: key.toString()});
