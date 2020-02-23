@@ -46,14 +46,21 @@ function getTimeline(err, data, response) {
   shortWordDict = {};
   var tempText = ""; //used when removing bad substrings from text
   //TODO: FIX REGEX TO CHECK AGAINST CAPITALIZATION (REDUCE ARTICLES IN FINAL DICT
-  var articles = [ " so ", /^so/, /so$/, /[w|W]ill/, /^will/, /will$/, " I ", /^I/, /I$/, " i ", /^i/, /i$/, " a ", /^a/, /a$/, " the ", /^the/, /the$/, " in ", /^in/, /in$/, " an ", /^an/, /an$/, " he ", /^he/, /he$/, " she ", /^she/, /she$/, " you ", /^you/, /you$/, " that ", /^that/, /that$/, " this ", /^this/, /this$/, " is ", /^is/, /is$/, " we ", /^we/, /we$/, " us ", /^us/, /us$/, " to ", /^to/, /to$/, " and ", /^and/, /and$/, " are ", /^are/, /are$/, " be ", /^be/, /be$/, " for ", /^for/, /for$/, " of ", /^of/, /of$/, " on ", /^on/, /on$/, " our ", /^our/, /our$/, " was ", /^was/, /was$/];
+  var articles = [ " so ", /^so/, /so$/, /[w|W]ill/, /^[w|W]ill/, /[w|W]ill$/, /\s[I|i]\s/, /^[I|i]/, /[I|i]$/, /\s[A|a]\s/, /^[a|A]/, /[a|A]$/, /\s[t|T]he\s/, /^[t|T]he/, /[t|T]he$/, /[i|I]n/, /^[i|I]n/, /[i|I]n$/, /\s[a|A]n\s/, /^[a|A]n/, /[a|A]n$/, /\s[h|H]\s/, /^[h|H]e/, /[h|H]e$/, /\s[s|S]he\s/, /^[s|S]he/, /[s|S]he$/, , /^you/, /you$/, " that ", /^that/, /that$/, " this ", /^this/, /this$/, " is ", /^is/, /is$/, " we ", /^we/, /we$/, " us ", /^us/, /us$/, " to ", /^to/, /to$/, " and ", /^and/, /and$/, " are ", /^are/, /are$/, " be ", /^be/, /be$/, " for ", /^for/, /for$/, " of ", /^of/, /of$/, " on ", /^on/, /on$/, " our ", /^our/, /our$/, " was ", /^was/, /was$/];
   var otherBadStuff = [".", "!", ",", "/", "?", /\shttps?.+?(?=$)/, /\shttps?.+?(?=[\n ])/];
+  
+  var badWords = ["I", "he", "she", "you", "him", "her", "so", "will", "with", "this", "that", "then", "is", "as", "in", "a", "at", "be", "for", "to", "and", "our", "your", "was", "of", "on", "us", "&amp;", "of"];
+  for (i = 0; i < badWords.length; i++) {
+    badWords[i] = badWords[i].replace(badWords[i][0], "[" + badWords[i][0].toUpperCase() + "|" + badWords[i][0].toLowerCase() + "]");
+    badWords[i] = "\\b" + badWords[i] + "\\b";
+  }
+  console.log(badWords);
 
   //get text of each tweet into array
   data.forEach(function(tweet) {
     tempText = tweet.full_text; //to be stripped away
     otherBadStuff.forEach(function(badStuff) {tempText = tempText.replace(badStuff, "")}); //strip away bad punctuation
-    articles.forEach(function(article) {tempText = tempText.replace(article, " ")}); //strip away bad articles
+    badWords.forEach(function(badWord) {tempText = tempText.replace(badWord, " ")}); //strip away bad words
     tweetTextList.push(tempText)
     countHashtags(tweet); //call function to count hashtags
   });
