@@ -27,8 +27,8 @@ var tweetTextList = []
 //parameters for the search
 var timelineParams = {
   screen_name: "sarahforbernie",
-  count: 100,
   include_rts: false,
+  count: 500,
   tweet_mode: "extended"
 }
 
@@ -48,6 +48,7 @@ function getTimeline(err, data, response) {
     tweetTextList.push(tempText);
     countHashtags(tweet); //call function to count hashtags, returns the dict based on frequency
   });
+  console.log(hashtagDict);
 }
 
 //helper function to getTimeline, counts hashtags and returns dictionary of all tags and their occurence
@@ -56,7 +57,7 @@ function countHashtags(tweet) {
 
   for (i = 0; i < hashtags.length; i++) {
     let tag = hashtags[i].text.toLowerCase();
-    console.log(tag);
+    console.log(tag)
     if (tag in hashtagDict) {
       hashtagDict[tag] += 1; //does exist, inc by 1
     }
@@ -65,6 +66,7 @@ function countHashtags(tweet) {
     }
   }
 }
+
 server.get('/getData', (req, res) => {
   n = req.url; //n is url
   console.log(n);
