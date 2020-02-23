@@ -26,6 +26,7 @@ var wordDict = {}
 
 //****Gets Timeline for a specified user****//
 function callEndpointTimeline(name) {
+  console.log("name:", name)
   //parameters for the search
   var timelineParams = {
     screen_name: name,
@@ -37,6 +38,8 @@ function callEndpointTimeline(name) {
 }
 
 function getTimeline(err, data, response) {
+  hashtagDict = {};
+  wordDict = {};
   let tempText = ""; //used when removing bad substrings from text
   let articles = [" I ", " a ", " the ", " in ", " an ", " he ", " she ", " you ", " that ", " this ", " is ", " we ", " us ", " to "];
   let otherBadStuff = [".", "!", ",", "/", "?", /\shttps?.+?(?=$)/, /\shttps?.+?(?=[\n ])/];
@@ -50,16 +53,15 @@ function getTimeline(err, data, response) {
     countHashtags(tweet); //call function to count hashtags
   });
     countWords(tweetTextList);
-    console.log(wordDict);
 };
 
-//helper function to getTimeline, counts words 
+//helper function to getTimeline, counts words
 function countWords(textList) {
   var word_list = [];
   for (i in textList) {
     word_list.push(textList[i].split(' '));
   }
-  
+
   for (i = 0; i < word_list.length; i++) {
     for (j = 0; j < word_list[i].length; j++) {
       if (word_list[i][j] in wordDict) {
@@ -100,14 +102,14 @@ server.get('/getData', (req, res) => {
 
   T.get('users/search', userParams, checkUser);
 
-  function checkUser(err, data, response) {  	
+  function checkUser(err, data, response) {
     if (data.length>0) { //if it exists
-      console.log('exists')
+      callEndpointTimeline(username);
+      res.send([wordDict,hashtagDict]);
     }
 
     if (data.length==0) { //if it doesn't exist
-      console.log('null')
+      res.send(['error']);
     }
   }
 });
-
