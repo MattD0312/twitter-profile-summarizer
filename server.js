@@ -39,7 +39,7 @@ function callEndpointTimeline(name) {
   var timelineParams = {
     screen_name: name,
     include_rts: false,
-    count: 500,
+    count: 1000,
     tweet_mode: "extended"
   }
   T.get('statuses/user_timeline', timelineParams, getTimeline);
@@ -78,6 +78,9 @@ function countWords(textList) {
   
   for (i = 0; i < word_list.length; i++) {
     for (j = 0; j < word_list[i].length; j++) {
+      if (word_list[i][j].length < 5) {
+        continue; //too small to be interesting, next word
+      }
       if (word_list[i][j] in wordDict) {
         wordDict[word_list[i][j]] += 1;
       }
