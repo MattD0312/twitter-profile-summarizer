@@ -22,6 +22,7 @@ var T = new Twit(config);
 //MUST BE GLOBAL, Makes it work
 var hashtagDict = {}
 var tweetTextList = []
+var wordDict = {}
 
 //****Gets Timeline for a specified user****//
 //parameters for the search
@@ -46,51 +47,37 @@ function getTimeline(err, data, response) {
     articles.forEach(function(article) {tempText = tempText.replace(article, " ")}); //strip away bad articles
     otherBadStuff.forEach(function(badStuff) {tempText = tempText.replace(badStuff, "")}); //strip away bad punctuation
     tweetTextList.push(tempText)
-    countHashtags(tweet); //call function to count hashtags, returns the dict based on frequency
+    countHashtags(tweet); //call function to count hashtags
   });
-  word_list=[];
-  for (i in tweetTextList) {
-    word_list.push(tweetTextList[i].split(' '));
-  }
-  console.log(word_list);
+    countWords(tweetTextList);
+    console.log(wordDict);
 };
 
-function compressArray(original) {
-  var compressed = [];
-  // make a copy of the input array
-  var copy = original.slice(0);
-
-  // first loop goes over every element
-  for (var i = 0; i < original.length; i++) {
-    var myCount = 0;
-    // loop over every element in the copy and see if it's the same
-    for (var w = 0; w < copy.length; w++) {
-      if (original[i] == copy[w]) {
-        // increase amount of times duplicate is found
-        myCount++;
-        // sets item to undefined
-        delete copy[w];
+//helper function to getTimeline, counts words 
+function countWords(textList) {
+  var word_list = [];
+  for (i in textList) {
+    word_list.push(textList[i].split(' '));
+  }
+  
+  for (i = 0; i < word_list.length; i++) {
+    for (j = 0; j < word_list[i].length; j++) {
+      if (word_list[i][j] in wordDict) {
+        wordDict[word_list[i][j]] += 1;
+      }
+      else {
+        wordDict[word_list[i][j]] = 1;
       }
     }
-
-    if (myCount > 0) {
-      var a = new Object();
-      a.value = original[i];
-      a.count = myCount;
-      compressed.push(a);
-    }
   }
-  return compressed;
-};
-
-
-//helper function to getTimeline, counts hashtags and returns dictionary of all tags and their occurence
+}
+//helper function to getTimeline, counts hashtags
 function countHashtags(tweet) {
   let hashtags = tweet.entities.hashtags;
 
   for (i = 0; i < hashtags.length; i++) {
     let tag = hashtags[i].text.toLowerCase();
-    console.log(tag)
+
     if (tag in hashtagDict) {
       hashtagDict[tag] += 1; //does exist, inc by 1
     }
