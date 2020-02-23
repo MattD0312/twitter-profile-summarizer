@@ -28,8 +28,8 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top" id="logo">Twitterphile</a>
-      <span id="sponser">@DragonHacks 2020</span>
+      <a class="navbar-brand js-scroll-trigger" href="#top" id="logo">Twitterphile</a>
+      <span id="sponser"><a href="https://dragonhacks.org" class="link-drag">@DragonHacks2020</a></span>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
@@ -102,6 +102,7 @@
   <script>
     var search = document.getElementById("search");
     var button = document.getElementById("button-search");
+    var username = '';
 
     //interactive navbar
     window.onscroll = function() {scrollFunction()};
@@ -139,7 +140,7 @@
     button.addEventListener("click", myFunction);
 
     function myFunction() {
-      var username = search.value.substring(1);
+      username = search.value.substring(1);
 
       var xhr = new XMLHttpRequest();
       xhr.addEventListener("load", responseReceivedHandler);
@@ -148,33 +149,52 @@
       xhr.send();
     }
 
-    // updates html content with weather info
     function responseReceivedHandler() {
       list = this.response;
       console.log(list);
+
+      //bar and pie graph
+      var count = 0;
+      for(var key in list[0]) {
+        chart1.options.title.text = "Top 10 Most Used Words For " + username;
+        chart2.options.title.text = "Top 10 Most Used Words For " + username;
+        //console.log(list[0][key]);
+        //console.log(count, key, list[0][key]);
+        chart1.data[0].dataPoints[count] = ({x: count, y: list[0][key], label: key.toString()});
+        chart2.data[0].dataPoints[count] = ({y: list[0][key], legendText: key.toString(), indexLabel: key.toString()});
+        count+=1;
+        if (count==10) {
+          break
+        }
+      }
+
+      //line and column chart1
+      var count = 0;
+      for(var key in list[1]) {
+        chart3.options.title.text = "Top 10 Most Used Hashtags For " + username;
+        chart4.options.title.text = "Top 10 Most Used Hashtags For " + username;
+
+        chart3.data[0].dataPoints[count] = ({x: count, y: list[1][key], indexLabel: key.toString()});
+        chart4.data[0].dataPoints[count] = ({y: list[1][key], label: key.toString()});
+        count+=1;
+        if (count==10) {
+          break
+        }
+      }
+
+      console.log("trying to change");
+      chart1.render();
+      //chart1.render();
+      chart2.render();
+      chart3.render();
+      chart4.render();
     }
 
-    var datapoints1 = [
-        { x: new Date(1992, 0), y: 2506000 },
-        { x: new Date(1993, 0), y: 2798000 },
-        { x: new Date(1994, 0), y: 3386000 },
-        { x: new Date(1995, 0), y: 6944000 },
-        { x: new Date(1996, 0), y: 6026000 },
-        { x: new Date(1997, 0), y: 2394000 },
-        { x: new Date(1998, 0), y: 1872000 },
-        { x: new Date(1999, 0), y: 2140000 },
-        { x: new Date(2000, 0), y: 7289000 },
-        { x: new Date(2001, 0), y: 4830000 },
-        { x: new Date(2002, 0), y: 2009000 },
-        { x: new Date(2003, 0), y: 2840000 },
-        { x: new Date(2004, 0), y: 2396000 },
-        { x: new Date(2005, 0), y: 1613000 },
-        { x: new Date(2006, 0), y: 2821000 }
-    ];
-
-    var chart = new CanvasJS.Chart("chartContainer1",
+    //Spline Chart
+    var chart1 = new CanvasJS.Chart("chartContainer1",
       {
           animationEnabled: true,
+          animationDuration: 1000,
           title: {
               text: "Spline Area Chart"
           },
@@ -186,28 +206,18 @@
               type: "splineArea",
               color: "rgba(255,12,32,.3)",
               dataPoints : [
-                  { x: new Date(1992, 0), y: 2506000 },
-                  { x: new Date(1993, 0), y: 2798000 },
-                  { x: new Date(1994, 0), y: 3386000 },
-                  { x: new Date(1995, 0), y: 6944000 },
-                  { x: new Date(1996, 0), y: 6026000 },
-                  { x: new Date(1997, 0), y: 2394000 },
-                  { x: new Date(1998, 0), y: 1872000 },
-                  { x: new Date(1999, 0), y: 2140000 },
-                  { x: new Date(2000, 0), y: 7289000 },
-                  { x: new Date(2001, 0), y: 4830000 },
-                  { x: new Date(2002, 0), y: 2009000 },
-                  { x: new Date(2003, 0), y: 2840000 },
-                  { x: new Date(2004, 0), y: 2396000 },
-                  { x: new Date(2005, 0), y: 1613000 },
-                  { x: new Date(2006, 0), y: 2821000 }
+                  { x: 1, y: 5, label: 'hello' },
+                  { x: 2, y: 9, label: 'hi' },
+                  { x: 3, y: 2, label: 'asdf' },
+                  { x: 4, y: 7, label: 'asldkf' },
+                  { x: 5, y: 5, label: 'woof' }
               ]
           },
           ]
       });
-    chart.render();
 
-    var chart = new CanvasJS.Chart("chartContainer2",
+
+    var chart2 = new CanvasJS.Chart("chartContainer2",
       {
           animationEnabled: true,
           title: {
@@ -229,18 +239,16 @@
           },
           ]
       });
-    chart.render();
 
-    var chart = new CanvasJS.Chart("chartContainer3",
+    var chart3 = new CanvasJS.Chart("chartContainer3",
       {
           animationEnabled: true,
           title: {
               text: "Line Chart"
           },
           axisX: {
-              valueFormatString: "MMM",
-              interval: 1,
-              intervalType: "month"
+              interval: 10,
+              labelAngle: -30
           },
           axisY: {
               includeZero: false
@@ -253,28 +261,21 @@
                 { x: new Date(2012, 01, 1), y: 414 },
                 { x: new Date(2012, 02, 1), y: 520, indexLabel: "highest", markerColor: "red", markerType: "triangle" },
                 { x: new Date(2012, 03, 1), y: 460 },
-                { x: new Date(2012, 04, 1), y: 450 },
-                { x: new Date(2012, 05, 1), y: 500 },
-                { x: new Date(2012, 06, 1), y: 480 },
-                { x: new Date(2012, 07, 1), y: 480 },
-                { x: new Date(2012, 08, 1), y: 410, indexLabel: "lowest", markerColor: "DarkSlateGrey", markerType: "cross" },
-                { x: new Date(2012, 09, 1), y: 500 },
-                { x: new Date(2012, 10, 1), y: 480 },
-                { x: new Date(2012, 11, 1), y: 510 }
+                { x: new Date(2012, 04, 1), y: 450 }
               ]
           }
           ]
       });
-    chart.render();
+    //chart.render();
 
-    var chart = new CanvasJS.Chart("chartContainer4",
+    var chart4 = new CanvasJS.Chart("chartContainer4",
       {
           animationEnabled: true,
           title: {
               text: "Column Chart"
           },
           axisX: {
-              interval: 10,
+              labelAngle: -30
           },
           data: [
           {
@@ -287,17 +288,15 @@
               dataPoints: [
                   { x: 10, y: 297571, label: "India" },
                   { x: 20, y: 267017, label: "Saudi" },
-                  { x: 30, y: 175200, label: "Canada" },
-                  { x: 40, y: 154580, label: "Iran" },
-                  { x: 50, y: 116000, label: "Russia" },
-                  { x: 60, y: 97800, label: "UAE" },
-                  { x: 70, y: 20682, label: "US" },
-                  { x: 80, y: 20350, label: "China" }
+                  { x: 30, y: 175200, label: "Canada" }
               ]
           },
           ]
       });
-    chart.render();
+    chart1.render();
+    chart2.render();
+    chart3.render();
+    chart4.render();
 
   </script>
 </body>

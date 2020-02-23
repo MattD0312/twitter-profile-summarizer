@@ -87,3 +87,12 @@ section {
   border: 1px solid #FF3D7F;
   box-shadow: 0 0 0 1px #f48fb1;
 }
+.link-drag {
+  padding-right: 10px;
+}
+.link-drag:link {
+  text-decoration: none;
+}
+.link-drag:hover {
+  color: white;
+}
