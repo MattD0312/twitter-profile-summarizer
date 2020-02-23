@@ -19,14 +19,24 @@ var Twit = require('twit');
 
 var T = new Twit(config);
 
-var params = {
-  q: 'akshay',
-  count: 100
+//****Gets Timeline for a specified user****//
+//parameters for the search
+var timelineParams = {
+  screen_name: "realdonaldtrump",
+  count: 10,
+  include_rts: false,
+  tweet_mode: "extended"
 }
 
-T.get('search/tweets', params, searchedData);
+T.get('statuses/user_timeline', timelineParams, getTimeline);
 
-function searchedData(err, data, response) {
-  console.log(data);
+function getTimeline(err, data, response) {
+  let tweetTextList = [];
+  let hashtagList = [];
+  for (i=0; i < data.length; i++) {
+    console.log("NEW TWEET");
+    console.log(data[i]);
+    tweetTextList.push(data[i].full_text);
+  }
+  console.log(tweetTextList);
 }
-
