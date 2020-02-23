@@ -25,16 +25,16 @@ var tweetTextList = []
 var wordDict = {}
 
 //****Gets Timeline for a specified user****//
-//parameters for the search
-var timelineParams = {
-  screen_name: "sarahforbernie",
-  include_rts: false,
-  count: 500,
-  tweet_mode: "extended"
+function callEndpointTimeline(name) {
+  //parameters for the search
+  var timelineParams = {
+    screen_name: name,
+    include_rts: false,
+    count: 500,
+    tweet_mode: "extended"
+  }
+  T.get('statuses/user_timeline', timelineParams, getTimeline);
 }
-
-//TODO: PUT IN FUNCTION TO BE CALLED BY SEAN
-T.get('statuses/user_timeline', timelineParams, getTimeline);
 
 function getTimeline(err, data, response) {
   let tempText = ""; //used when removing bad substrings from text
@@ -88,22 +88,24 @@ function countHashtags(tweet) {
   }
 }
 
+//gets username, recieves name from client
 server.get('/getData', (req, res) => {
-  n = req.url; //n is url
-  console.log(n);
+  n = req.url.toString().split("="); //n is url
+  username = n[1];
+
   var userParams = {
-    q: 'Donald Trump',
+    q: username,
     count: 1
   }
 
-  T.get('users/search', userParams, searchedData);
+  T.get('users/search', userParams, checkUser);
 
-  function searchedData(err, data, response) {  	
-    if (data.length>0){
+  function checkUser(err, data, response) {  	
+    if (data.length>0) { //if it exists
       console.log('exists')
     }
 
-    if (data.length==0){
+    if (data.length==0) { //if it doesn't exist
       console.log('null')
     }
   }
