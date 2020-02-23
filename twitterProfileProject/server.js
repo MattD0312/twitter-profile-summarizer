@@ -42,9 +42,55 @@ function getTimeline(err, data, response) {
     tempText = tweet.full_text; //to be stripped away
     articles.forEach(function(article) {tempText = tempText.replace(article, " ")}); //strip away bad articles
     otherBadStuff.forEach(function(badStuff) {tempText = tempText.replace(badStuff, "")}); //strip away bad punctuation
-    tweetTextList.push(tempText);
+    tweetTextList.push(tempText)
+     
+    
   });
-}
+        word_list=[];
+     for (i in tweetTextList){
+
+          word_list.push(tweetTextList[i].split(' '));
+
+        }
+
+        console.log(word_list);
+
+
+  };
+
+function compressArray(original) {
+
+        var compressed = [];
+        // make a copy of the input array
+        var copy = original.slice(0);
+
+        // first loop goes over every element
+        for (var i = 0; i < original.length; i++) {
+
+                var myCount = 0;
+                // loop over every element in the copy and see if it's the same
+                for (var w = 0; w < copy.length; w++) {
+                        if (original[i] == copy[w]) {
+                                // increase amount of times duplicate is found
+                                myCount++;
+                                // sets item to undefined
+                                delete copy[w];
+                        }
+                }
+
+                if (myCount > 0) {
+                        var a = new Object();
+                        a.value = original[i];
+                        a.count = myCount;
+                        compressed.push(a);
+                }
+        }
+
+        return compressed;
+};
+
+
+
 
 var userParams = {
       q: 'Donald Trump',
