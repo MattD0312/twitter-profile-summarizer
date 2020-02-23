@@ -1,7 +1,11 @@
 var express = require("express");
 var server = express();
 
-server.use(express.static(__dirname + "/public/index.html"));
+//server.use(express.static(__dirname + "/public/index.html"));
+
+server.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + 'public/index.html'));
+});
 
 server.listen(process.env.PORT || 8080);
 
