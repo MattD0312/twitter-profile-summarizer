@@ -71,6 +71,7 @@ function countWords(textList) {
     }
   }
 }
+
 //helper function to getTimeline, counts hashtags
 function countHashtags(tweet) {
   let hashtags = tweet.entities.hashtags;
