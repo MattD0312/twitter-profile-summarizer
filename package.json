@@ -2,9 +2,9 @@
 {
   "name": "twitterphile",
   "description": "Our sample Node to Heroku app",
-  "main": "twitterProfileProject/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node twitterProfileProject/server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "ejs": "^1.0.0",
