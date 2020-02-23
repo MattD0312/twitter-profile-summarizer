@@ -19,11 +19,15 @@ var Twit = require('twit');
 
 var T = new Twit(config);
 
+//MUST BE GLOBAL, Makes it work
+var hashtagDict = {}
+var tweetTextList = []
+
 //****Gets Timeline for a specified user****//
 //parameters for the search
 var timelineParams = {
-  screen_name: "realdonaldtrump",
-  count: 10,
+  screen_name: "sarahforbernie",
+  count: 100,
   include_rts: false,
   tweet_mode: "extended"
 }
@@ -32,8 +36,6 @@ var timelineParams = {
 T.get('statuses/user_timeline', timelineParams, getTimeline);
 
 function getTimeline(err, data, response) {
-  var tweetTextList = [];
-  var hashtagDict = {};
   let tempText = ""; //used when removing bad substrings from text
   let articles = [" I ", " a ", " the ", " in ", " an ", " he ", " she ", " you ", " that ", " this ", " is ", " we ", " us ", " to "];
   let otherBadStuff = [".", "!", ",", "/", "?", /\shttps?.+?(?=$)/, /\shttps?.+?(?=[\n ])/];
@@ -44,12 +46,24 @@ function getTimeline(err, data, response) {
     articles.forEach(function(article) {tempText = tempText.replace(article, " ")}); //strip away bad articles
     otherBadStuff.forEach(function(badStuff) {tempText = tempText.replace(badStuff, "")}); //strip away bad punctuation
     tweetTextList.push(tempText);
-    countHashtags(tweet); //call function to count hashtags, add to dict based on frequency
+    countHashtags(tweet); //call function to count hashtags, returns the dict based on frequency
   });
 }
 
+//helper function to getTimeline, counts hashtags and returns dictionary of all tags and their occurence
 function countHashtags(tweet) {
-  console.log("TODO"); 
+  let hashtags = tweet.entities.hashtags;
+
+  for (i = 0; i < hashtags.length; i++) {
+    let tag = hashtags[i].text.toLowerCase();
+    console.log(tag);
+    if (tag in hashtagDict) {
+      hashtagDict[tag] += 1; //does exist, inc by 1
+    }
+    else {
+      hashtagDict[tag] = 1; //doesn't exist, set it to 0
+    }
+  }
 }
 server.get('/getData', (req, res) => {
   n = req.url; //n is url
