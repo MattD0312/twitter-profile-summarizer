@@ -5,7 +5,7 @@ const path = require('path');
 //server.use(express.static(__dirname + "/public/index.html"));
 
 server.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + 'public/index.html'));
+    res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 server.listen(process.env.PORT || 8080);
