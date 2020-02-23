@@ -20,13 +20,27 @@ var Twit = require('twit');
 var T = new Twit(config);
 
 var params = {
-  q: 'akshay',
-  count: 100
+      q: 'Donald Trump',
+  count: 1
 }
 
-T.get('search/tweets', params, searchedData);
+    T.get('users/search', params, searchedData);
 
 function searchedData(err, data, response) {
-  console.log(data);
+  	
+	if (data.length>0){
+	
+		console.log('exists')
+	}
+
+	if (data.length==0){
+		console.log('null')
+	}
+		
+	
+
 }
+
+  
+
 
