@@ -40,9 +40,9 @@ function callEndpointTimeline(name) {
 function getTimeline(err, data, response) {
   hashtagDict = {};
   wordDict = {};
-  let tempText = ""; //used when removing bad substrings from text
-  let articles = [" I ", " a ", " the ", " in ", " an ", " he ", " she ", " you ", " that ", " this ", " is ", " we ", " us ", " to "];
-  let otherBadStuff = [".", "!", ",", "/", "?", /\shttps?.+?(?=$)/, /\shttps?.+?(?=[\n ])/];
+  var tempText = ""; //used when removing bad substrings from text
+  var articles = [" I ", " a ", " the ", " in ", " an ", " he ", " she ", " you ", " that ", " this ", " is ", " we ", " us ", " to "];
+  var otherBadStuff = [".", "!", ",", "/", "?", /\shttps?.+?(?=$)/, /\shttps?.+?(?=[\n ])/];
 
   //get text of each tweet into array
   data.forEach(function(tweet) {
@@ -53,7 +53,6 @@ function getTimeline(err, data, response) {
     countHashtags(tweet); //call function to count hashtags
   });
     countWords(tweetTextList);
-    console.log(wordDict);
 };
 
 //helper function to getTimeline, counts words 
@@ -77,16 +76,16 @@ function countWords(textList) {
 
 //helper function to getTimeline, counts hashtags
 function countHashtags(tweet) {
-  let hashtags = tweet.entities.hashtags;
+  var hashtags = tweet.entities.hashtags;
 
   for (i = 0; i < hashtags.length; i++) {
-    let tag = hashtags[i].text.toLowerCase();
+    var tag = hashtags[i].text.toLowerCase();
 
     if (tag in hashtagDict) {
       hashtagDict[tag] += 1; //does exist, inc by 1
     }
     else {
-      hashtagDict[tag] = 1; //doesn't exist, set it to 0
+      hashtagDict[tag] = 1; //doesn't exist, set it to 1
     }
   }
 }
@@ -106,10 +105,11 @@ server.get('/getData', (req, res) => {
   function checkUser(err, data, response) {
     if (data.length>0) { //if it exists
       callEndpointTimeline(username);
-      res.send([wordDict,hashtagDict]);
+      setTimeout(function() { res.send([wordDict, hashtagDict]) }, 1000);
     }
 
     if (data.length==0) { //if it doesn't exist
+      console.log(username);
       res.send(['error']);
     }
   }
