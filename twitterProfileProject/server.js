@@ -23,6 +23,8 @@ var T = new Twit(config);
 var hashtagDict = {}
 var tweetTextList = []
 var wordDict = {}
+var shortHashtagDict = {};
+var shortWordDict = {};
 
 //****Gets Timeline for a specified user****//
 function callEndpointTimeline(name) {
@@ -40,26 +42,32 @@ function callEndpointTimeline(name) {
 function getTimeline(err, data, response) {
   hashtagDict = {};
   wordDict = {};
+  shortHashtagDict = {};
+  shortWordDict = {};
   var tempText = ""; //used when removing bad substrings from text
-  var articles = [" I ", " a ", " the ", " in ", " an ", " he ", " she ", " you ", " that ", " this ", " is ", " we ", " us ", " to "];
+  //TODO: FIX REGEX TO CHECK AGAINST CAPITALIZATION (REDUCE ARTICLES IN FINAL DICT
+  var articles = [ " so ", /^so/, /so$/, /[w|W]ill/, /^will/, /will$/, " I ", /^I/, /I$/, " i ", /^i/, /i$/, " a ", /^a/, /a$/, " the ", /^the/, /the$/, " in ", /^in/, /in$/, " an ", /^an/, /an$/, " he ", /^he/, /he$/, " she ", /^she/, /she$/, " you ", /^you/, /you$/, " that ", /^that/, /that$/, " this ", /^this/, /this$/, " is ", /^is/, /is$/, " we ", /^we/, /we$/, " us ", /^us/, /us$/, " to ", /^to/, /to$/, " and ", /^and/, /and$/, " are ", /^are/, /are$/, " be ", /^be/, /be$/, " for ", /^for/, /for$/, " of ", /^of/, /of$/, " on ", /^on/, /on$/, " our ", /^our/, /our$/, " was ", /^was/, /was$/];
   var otherBadStuff = [".", "!", ",", "/", "?", /\shttps?.+?(?=$)/, /\shttps?.+?(?=[\n ])/];
 
   //get text of each tweet into array
   data.forEach(function(tweet) {
     tempText = tweet.full_text; //to be stripped away
-    articles.forEach(function(article) {tempText = tempText.replace(article, " ")}); //strip away bad articles
     otherBadStuff.forEach(function(badStuff) {tempText = tempText.replace(badStuff, "")}); //strip away bad punctuation
+    articles.forEach(function(article) {tempText = tempText.replace(article, " ")}); //strip away bad articles
     tweetTextList.push(tempText)
     countHashtags(tweet); //call function to count hashtags
   });
     countWords(tweetTextList);
+    getTopHashtags();
+    getTopWords();
 };
 
 //helper function to getTimeline, counts words 
 function countWords(textList) {
   var word_list = [];
+  var delim = /\s+/
   for (i in textList) {
-    word_list.push(textList[i].split(' '));
+    word_list.push(textList[i].split(delim));
   }
   
   for (i = 0; i < word_list.length; i++) {
@@ -90,6 +98,53 @@ function countHashtags(tweet) {
   }
 }
 
+//fills out shortHashtagDict with 10 most frequently used hashtags in hashtagDict
+function getTopHashtags() {
+  counter = 0; //counts up to how many hashtags you want
+  maxHashtags = 10; //how many hashtags 
+  for (var key in hashtagDict) {
+    if (counter < maxHashtags) {
+      shortHashtagDict[key] = hashtagDict[key] //build default to compare against
+      counter += 1;
+    }
+    else {
+      for (var shortKey in shortHashtagDict) { //check against shortDict
+        if (hashtagDict[key] > shortHashtagDict[shortKey]) {
+          delete shortHashtagDict[shortKey]; //remove hashtag with shorter value
+	  shortHashtagDict[key] = hashtagDict[key]; //replace with bigger value and hashtag
+	  break; //leave loop, don't want to replace too many
+	}
+      }
+      console.log(shortHashtagDict);
+      console.log("RESET");
+    }
+  }
+  console.log(hashtagDict);
+}
+
+//fills out shortWordDict with 10 most frequently used words in wordDict
+function getTopWords() {
+  counter = 0; //counts up to how many words you want
+  maxWords = 10; //how many words 
+  for (var key in wordDict) {
+    if (counter < maxWords) {
+      shortWordDict[key] = wordDict[key] //build default to compare against
+      counter += 1;
+    }
+    else {
+      for (var shortKey in shortWordDict) { //check against shortDict
+        if (wordDict[key] > shortWordDict[shortKey]) {
+          delete shortWordDict[shortKey]; //remove word with shorter value
+	  shortWordDict[key] = wordDict[key]; //replace with bigger value and hashtag
+	  break; //leave loop, don't want to replace too many
+	}
+      }
+      console.log(shortWordDict);
+      console.log("RESET");
+    }
+  }
+  console.log(wordDict);
+}
 //gets username, recieves name from client
 server.get('/getData', (req, res) => {
   n = req.url.toString().split("="); //n is url
@@ -105,7 +160,7 @@ server.get('/getData', (req, res) => {
   function checkUser(err, data, response) {
     if (data.length>0) { //if it exists
       callEndpointTimeline(username);
-      setTimeout(function() { res.send([wordDict, hashtagDict]) }, 1000);
+      setTimeout(function() { res.send([shortWordDict, shortHashtagDict]); }, 1000);
     }
 
     if (data.length==0) { //if it doesn't exist
