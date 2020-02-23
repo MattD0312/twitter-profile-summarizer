@@ -26,7 +26,7 @@ var wordDict = {}
 
 //****Gets Timeline for a specified user****//
 function callEndpointTimeline(name) {
-  console.log("name:", name)
+  console.log("name:", name) //tests name being searched
   //parameters for the search
   var timelineParams = {
     screen_name: name,
@@ -53,15 +53,16 @@ function getTimeline(err, data, response) {
     countHashtags(tweet); //call function to count hashtags
   });
     countWords(tweetTextList);
+    console.log(wordDict);
 };
 
-//helper function to getTimeline, counts words
+//helper function to getTimeline, counts words 
 function countWords(textList) {
   var word_list = [];
   for (i in textList) {
     word_list.push(textList[i].split(' '));
   }
-
+  
   for (i = 0; i < word_list.length; i++) {
     for (j = 0; j < word_list[i].length; j++) {
       if (word_list[i][j] in wordDict) {
@@ -101,7 +102,7 @@ server.get('/getData', (req, res) => {
   }
 
   T.get('users/search', userParams, checkUser);
-
+  
   function checkUser(err, data, response) {
     if (data.length>0) { //if it exists
       callEndpointTimeline(username);
