@@ -6,4 +6,4 @@ Web application designed to show usage of twitter handles.  Displays most used h
 
 Encourages people to build a better Twitter community by seeing someone's profile at a glance, and to see how someone acts online as an insight into their character.
 
-twitterphile.herokuapp.com/
+https://twitterphile.herokuapp.com/
